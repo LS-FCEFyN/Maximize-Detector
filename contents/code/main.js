@@ -4,7 +4,7 @@
 // Script created with the sole purpose of adding support for
 // Linux Wallpaper Engine pause on maximize / fullscreen feature on KDE Plasma.
 
-// Revision 6
+// Revision 7
 
 "use strict";
 
@@ -27,6 +27,12 @@ const MODE_FULL       = 3;
 const windowKey = (w) =>
     w.internalId ? String(w.internalId) : `${w.pid}:${w.caption}`;
 
+const windowAppId = (w) => {
+    // Prefer Wayland app id / desktop id style properties, then X11 WM_CLASS.
+    const raw = w.desktopFileName || w.resourceClass || w.resourceName || "";
+    return String(raw);
+};
+
 const modeToState = (mode, isFullScreen) => {
     const fully = mode === MODE_FULL || isFullScreen;
     return {
@@ -44,14 +50,16 @@ const currentState = (w) => modeToState(w.maximizeMode, w.fullScreen || false);
 
 const notify = (w, h, v, fully) => {
     try {
+        const appId = windowAppId(w);
         console.info(
             "[MaximizeDetector] notify:", w.caption,
-            "pid=", w.pid, "h=", h, "v=", v, "fully=", fully
+            "pid=", w.pid, "appId=", appId,
+            "h=", h, "v=", v, "fully=", fully
         );
         callDBus(
             DBUS_SERVICE, DBUS_PATH, DBUS_SERVICE,
             "OnWindowChanged",
-            windowKey(w), w.caption, w.pid, h, v, fully
+            windowKey(w), w.caption, w.pid, appId, h, v, fully
         );
     } catch (e) {
         console.warn("[MaximizeDetector] D-Bus call failed:", e);
