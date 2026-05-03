@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Name": "Maximize Detector",
+        "Description": "Detects and emits equivalent signals to those emitted by KWin over DBUS for use with the Linux Wallpaper Engine project.",
+        "Icon": "preferences-system-windows",
+        
+        "Authors": [
+            {
+                "Email": "you@example.com",
+                "Name": "Loretta Sirerol"
+            }
+        ],
+        "Id": "maximize_detector",
+        "Version": "0.6",
+        "License": "GPLv2",
+        "Website": "https://github.com/LS-FCEFyN/Maximize-Detector"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Script"
+}
